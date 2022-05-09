@@ -148,9 +148,6 @@ class Client:
 	
 	def sendRtspRequest(self, requestCode):
 		"""Send RTSP request to the server."""	
-		#-------------
-		# TO COMPLETE
-		#-------------
 		
 		# Setup request
 		if requestCode == self.SETUP and self.state == self.INIT:
@@ -248,14 +245,14 @@ class Client:
 						self.openRtpPort() 
 					elif self.requestSent == self.PLAY:
 						self.state = self.PLAYING
+
 					elif self.requestSent == self.PAUSE:
 						self.state = self.PAUSE
-						
 						# The play thread exits. A new thread is created on resume.
 						self.playEvent.set()
+
 					elif self.requestSent == self.TEARDOWN:
 						self.state = self.INIT
-						
 						# Flag the teardownAcked to close the socket.
 						self.teardownAcked = 1 
 	
