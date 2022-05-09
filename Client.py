@@ -1,7 +1,9 @@
+from ctypes import sizeof
 from tkinter import *
 import tkinter.messagebox
 from PIL import Image, ImageTk
 import socket, threading, sys, traceback, os
+import time
 
 from RtpPacket import RtpPacket
 
@@ -92,6 +94,8 @@ class Client:
 	
 	def listenRtp(self):		
 		"""Listen for RTP packets."""
+		startBps = time.time()
+		startPcktDrop = time.time()
 		while True:
 			try:
 				data = self.rtpSocket.recv(20480)
@@ -106,8 +110,18 @@ class Client:
 					# TO COMPLETE
 					#-------------
 					# Statistics about the session are printed here
-					# ...
-										
+					bps = (sys.getsizeof(rtpPacket.getPayload) * 8) / (time.time() - startBps)
+					print("%d Bits per Second" % int (bps))
+					startBps = time.time()
+
+					frameDiff = currFrameNbr - self.frameNbr
+
+					if frameDiff != 1:
+						frDroppedps = frameDiff / (time.time() - startPcktDrop)
+						print("%.6f Frames Dropped per Second" % frDroppedps)
+						startPcktDrop = time.time()
+
+
 					if currFrameNbr > self.frameNbr: # Discard the late packet
 						self.frameNbr = currFrameNbr
 						self.updateMovie(self.writeFrame(rtpPacket.getPayload()))
