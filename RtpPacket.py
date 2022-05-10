@@ -27,7 +27,7 @@ class RtpPacket:
 		#byte 3: sequence number (1)
 		header[2] = seqnum >> 8
 		#byte 4: sequence number (2)
-		header[3] =  seqnum
+		header[3] =  seqnum & 0b11111111
 		
 		# Bitwise AND used below to filter out unwanted leading 1's
 
